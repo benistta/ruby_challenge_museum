@@ -22,23 +22,31 @@ class Museum
     @patrons << patron
   end
 
-  def have_interests(patron)
-    @epatrons.select do |patron|
+  def have_interest(exhibit)
+    @patrons.find_all do |patron|
       patron.interests.include?(exhibit.name)
+    end
   end
 
   def patrons_by_exhibit_interest
-    result_hash = {}
-    @exhibits.each do |exhibit|
-      @patrons.select do |patron|
-        if result_hash[exhibit].nil?
-          result_hash[exhibit] = phave_interests(patron)
-          require "pry"; binding.pry
+    result = {}
+     @exhibits.each do |exhibit|
+       # if result[exhibit].nil?
+        result[exhibit] = have_interest(exhibit)
+      # end
      end
-    end
-    end
-    result_hash
-
+     result
   end
 
+  def ticket_lottery_contestants(exhibit)
+    @patrons.find_all do |patron|
+    patron.spending_money < exhibit.cost
+    end
+  end
+
+  def draw_lottery_winner(exhibit)
+    ticket_lottery_contestants(exhibit).map do |contestant|
+      contestant.name
+    end.sample
+  end
 end
